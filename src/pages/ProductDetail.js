@@ -1,5 +1,6 @@
 import { getSingleProduct } from "../../service/products_service.js";
 import { AppHeader } from "../components/AppHeader.js";
+import { ProductDetailCard } from "../components/ProductDetailCard.js";
 import { store } from "../store/module.js";
 import { getCartsState } from "../store/selector.js";
 
@@ -50,75 +51,32 @@ export default function ProductDetail({ $target }) {
       `;
     }
 
-    const {
-      id,
-      title,
-      thumbnail,
-      brand,
-      category,
-      price,
-      stock,
-      description,
-      discountPercentage,
-    } = product;
+    const { id, stock } = product;
 
     const carts = store.getState(getCartsState);
     const currentItem = carts[id];
 
     return `
-    <div id="product">
+    <main id="product">
       <div id="header"></div>
+      <div class="card">
+        ${ProductDetailCard({ product })}
 
-      <main style="display:flex">
-        <div>
-          <img class="product-img large" src="${thumbnail}" alt="${title}" />
-        </div>
-        <div>
-          <dl>
-            <div>
-              <dt>title</dt>
-              <dd>${title}</dd>
-            </div>
-            <div>
-              <dt>brand</dt>
-              <dd>${brand}</dd>
-            </div>
-            <div>
-              <dt>category</dt>
-              <dd>${category}</dd>
-            </div>
-            <div>
-              <dt>price</dt>
-              <dd>$${price}</dd>
-            </div>
-            <div>
-              <dt>stock</dt>
-              <dd>${stock}</dd>
-            </div>
-            <div>
-              <dt>description</dt>
-              <dd>${description}</dd>
-            </div>
-            <div>
-              <dt>discountPercentage</dt>
-              <dd>${discountPercentage}</dd>
-            </div>
-          </dl>
-        
-          <form class="form-save">
-            ${
-              currentItem
-                ? `<p>${currentItem.quantity} 개가 장바구니에 이미 담겨있어요!</p>`
-                : ``
-            }
+        <form class="form-save">
+          ${
+            currentItem
+              ? `<p>${currentItem.quantity} 개가 장바구니에 이미 담겨있어요!</p>`
+              : ``
+          }
+          <div>
             <input min="1" max="${stock}" type="number" name="quantity" />
             <button class="btn-save" type="submit" >
               장바구니 담기!
             </button>
-          </form>
-        </div>
-      </main> 
-    </div>
+          </div>
+        </form>
+      </div> 
+    </main>
       `;
   };
 

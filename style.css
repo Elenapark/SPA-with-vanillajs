@@ -24,8 +24,6 @@ header .title {
 .product-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  border: 1px solid black;
-  padding: 32px;
 }
 
 .product {
@@ -99,4 +97,27 @@ dt {
 
 .product-desc > div > input {
   width: 48px;
+}
+
+.card {
+  border: 1px solid black;
+  padding: 32px;
+}
+
+.product-detail {
+  display: flex;
+}
+
+.left {
+  flex: 1;
+}
+.right {
+  flex: 1;
+}
+
+.form-save {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  flex-direction: column;
 }
