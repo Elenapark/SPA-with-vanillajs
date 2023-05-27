@@ -7,7 +7,7 @@ export function Product({ product }) {
     <li class="product" data-id=${id}>
       <img class="product-img" src="${thumbnail}" alt="${title}" />
       <h5>${title}</h5>
-      <p>${price}</p>
+      <p>$${price}</p>
     </li>
   `;
 }
