@@ -24,12 +24,24 @@ header .title {
 .product-container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  border: 1px solid black;
+  padding: 32px;
 }
 
 .product {
   display: flex;
   flex-direction: column;
+  align-items: center;
   list-style: none;
+  text-align: center;
+}
+
+.product > h5 {
+  margin: 0;
+}
+
+.product > p {
+  margin: 0;
 }
 
 .product-img {
