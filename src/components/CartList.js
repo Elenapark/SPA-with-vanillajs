@@ -9,23 +9,30 @@ export function CartList({ carts }) {
     `;
   }
 
-  return Object.values(carts)
-    ?.map((product) => {
-      const { id, title, thumbnail, quantity } = product;
-      return `
-      <div class="cart__container" style="display:flex;">
-        <div>
-          <img class="product-img" src="${thumbnail}" alt="${title}" />
+  return `
+  <ul class="cart-list">
+    ${Object.values(carts)
+      ?.map((product) => {
+        const { id, title, thumbnail, quantity } = product;
+        return `
+        <div class="cart-item">
+          <div>
+            <img class="product-img" src="${thumbnail}" alt="${title}" />
+          </div>
+  
+          <div>
+            <div class="product-desc" style="display:flex;">
+              <p>${title}</p>
+              <div>
+                <input readonly value="${quantity}" />
+                <button data-id="${id}" class="btn-delete">삭제</button>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div>
-          <div style="display:flex;">
-          <p>${title}</p>
-          <input readonly value="${quantity}" />
-          <button data-id="${id}" class="btn-delete">삭제</button>
-        </div>
-      </div>
-    `;
-    })
-    .join("");
+      `;
+      })
+      .join("")}
+  </ul>
+  `;
 }

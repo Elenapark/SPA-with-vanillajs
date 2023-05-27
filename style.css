@@ -76,3 +76,27 @@ header .title {
 dt {
   font-weight: bold;
 }
+.cart-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-desc {
+  display: flex;
+  align-items: center;
+}
+
+.product-desc > p {
+  margin-right: 16px;
+}
+
+.product-desc > div > input {
+  width: 48px;
+}
