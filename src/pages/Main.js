@@ -170,7 +170,10 @@ export default function Main({ $target }) {
   };
 
   this.initFetch = async () => {
-    const { limit, skip } = store.getState(getMainState);
+    const { limit, skip, products } = store.getState(getMainState);
+
+    if (products.length !== 0) return;
+
     const result = await getAllProducts({
       limit,
       skip,
