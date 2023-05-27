@@ -27,7 +27,11 @@ export default function Main({ $target }) {
     
       <div class="controller">
         ${Select({
-          options: [{ value: 10 }, { value: 20 }, { value: 30 }],
+          options: [
+            { value: 10, label: "10개" },
+            { value: 20, label: "20개" },
+            { value: 30, label: "30개" },
+          ],
           selectedValue: limit,
         })}
         ${SearchBar({ q, total })}
