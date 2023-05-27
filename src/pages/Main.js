@@ -24,17 +24,16 @@ export default function Main({ $target }) {
     return `
     <main id="main">
       <div id="header"></div>
-      <div id="cart"></div>
-
-      ${SearchBar({ q, total })}
-
-      ${Select({
-        options: [{ value: 10 }, { value: 20 }, { value: 30 }],
-        selectedValue: limit,
-      })}
+    
+      <div class="controller">
+        ${Select({
+          options: [{ value: 10 }, { value: 20 }, { value: 30 }],
+          selectedValue: limit,
+        })}
+        ${SearchBar({ q, total })}
+      </div>
 
       ${ProductList({ products })}
-
       ${Pagination({ total, limit, currentPage: page })}
 
     </main>
@@ -155,7 +154,7 @@ export default function Main({ $target }) {
       const refreshEl = targetEl.closest(".btn-delete");
 
       if (productEl) {
-        const { id } = targetEl.dataset;
+        const { id } = productEl.dataset;
         this.goToDetail(id);
       }
 

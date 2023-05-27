@@ -15,7 +15,7 @@ export function CartList({ carts }) {
       return `
       <div class="cart__container" style="display:flex;">
         <div>
-          <img src="${thumbnail}" alt="${title}" />
+          <img class="product-img" src="${thumbnail}" alt="${title}" />
         </div>
 
         <div>

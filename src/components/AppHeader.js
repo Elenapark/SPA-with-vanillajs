@@ -13,10 +13,14 @@ export function AppHeader({ title, $target, isBack = true }) {
   this.template = () => {
     return `
     <header>
-      ${
-        this.canBack() && isBack ? `<button class="btn-back">뒤로</button>` : ""
-      }
-      ${title}
+      <div class="title">
+        ${
+          this.canBack() && isBack
+            ? `<button class="btn-back">뒤로</button>`
+            : ""
+        }
+      <h1>${title}</h1>
+      </div>
 
       <div id="cart"></div>
     </header>
