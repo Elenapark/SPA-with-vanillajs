@@ -1,4 +1,5 @@
 import { navigate } from "../router.js";
+import { CartStatus } from "./CartStatus.js";
 
 export function AppHeader({ title, $target, isBack = true }) {
   this.$target = $target;
@@ -16,12 +17,16 @@ export function AppHeader({ title, $target, isBack = true }) {
         this.canBack() && isBack ? `<button class="btn-back">뒤로</button>` : ""
       }
       ${title}
+
+      <div id="cart"></div>
     </header>
     `;
   };
 
   this.mount = () => {
     const $container = $target.querySelector("header");
+    const $cart = $target.querySelector("#cart");
+    new CartStatus({ $target: $cart });
     this.setEevent($container);
   };
 

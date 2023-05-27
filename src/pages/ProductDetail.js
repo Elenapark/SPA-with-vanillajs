@@ -1,6 +1,5 @@
 import { getSingleProduct } from "../../service/products_service.js";
 import { AppHeader } from "../components/AppHeader.js";
-import { CartStatus } from "../components/CartStatus.js";
 import { store } from "../store/module.js";
 import { getCartsState } from "../store/selector.js";
 
@@ -69,9 +68,7 @@ export default function ProductDetail({ $target }) {
     return `
     <div id="product">
       <div id="header"></div>
-      <div>
-        Cart : ${CartStatus()}
-      </div>
+
       <main style="display:flex">
         <div>
           <img src="${thumbnail}" alt="${title}" />

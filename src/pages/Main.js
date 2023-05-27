@@ -7,7 +7,6 @@ import {
   Pagination,
   ProductList,
   Select,
-  CartStatus,
   AppHeader,
 } from "../components/index.js";
 import { navigate } from "../router.js";
@@ -25,28 +24,18 @@ export default function Main({ $target }) {
     return `
     <main id="main">
       <div id="header"></div>
-    
-      <div>
-        <ul>
-          <li>limit : ${limit}</li>
-          <li>skip : ${skip}</li>
-          <li>total : ${total}</li>
-          <li>page : ${page}</li>
-          <li>q : ${q}</li>
-          <li>${CartStatus()}</li>
-        </ul>
-      </div>
+      <div id="cart"></div>
 
-    ${SearchBar({ q, total })}
+      ${SearchBar({ q, total })}
 
-    ${Select({
-      options: [{ value: 10 }, { value: 20 }, { value: 30 }],
-      selectedValue: limit,
-    })}
+      ${Select({
+        options: [{ value: 10 }, { value: 20 }, { value: 30 }],
+        selectedValue: limit,
+      })}
 
-    ${ProductList({ products })}
+      ${ProductList({ products })}
 
-    ${Pagination({ total, limit, currentPage: page })}
+      ${Pagination({ total, limit, currentPage: page })}
 
     </main>
     `;
