@@ -1,20 +1,24 @@
-import { routes } from "./constants/routingInfo.js";
+import { LOCATION_ORIGIN, routes } from "./constants/routingInfo.js";
 import NotFound404 from "./pages/NotFound404.js";
 
 export default function Router({ $target }) {
   this.$target = $target;
 
-  const findMatchedRoute = () => {
+  this.findMatchedRoute = () => {
     const result = routes.find((route) => route.path.test(location.pathname));
     return result;
   };
 
-  const displayMatchedRoute = () => {
-    const Component = findMatchedRoute()?.element || NotFound404;
-    new Component({ $target: this.$target });
-  };
+  this.setEvent = () => {
+    window.addEventListener("click", (e) => {
+      const target = e.target.closest("a");
+      if (!(target instanceof HTMLAnchorElement)) return;
+      e.preventDefault();
 
-  const init = () => {
+      const targetURL = e.target.href.replace(LOCATION_ORIGIN, "");
+      navigate(targetURL);
+    });
+
     window.addEventListener("historyChange", ({ detail }) => {
       const { to, isReplace } = detail;
 
@@ -24,16 +28,20 @@ export default function Router({ $target }) {
         history.pushState(null, "", to);
       }
 
-      displayMatchedRoute();
+      this.render();
     });
 
     window.addEventListener("popstate", () => {
-      displayMatchedRoute();
+      this.render();
     });
   };
 
-  init();
-  displayMatchedRoute();
+  this.render = () => {
+    const Component = this.findMatchedRoute()?.element || NotFound404;
+    new Component({ $target: this.$target }).render();
+  };
+
+  this.setEvent();
 }
 
 /**
@@ -48,5 +56,5 @@ export const navigate = (to, isReplace = false) => {
     },
   });
 
-  dispatchEvent(historyChangeEvent);
+  window.dispatchEvent(historyChangeEvent);
 };

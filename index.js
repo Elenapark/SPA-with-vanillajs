@@ -2,4 +2,6 @@ import App from "./src/App.js";
 
 const $target = document.querySelector("#app");
 
-new App({ $target });
+const app = new App({ $target });
+
+app.render();

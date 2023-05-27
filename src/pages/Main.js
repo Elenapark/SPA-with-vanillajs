@@ -3,26 +3,27 @@ import {
   getProductsWithQuery,
 } from "../../service/products_service.js";
 import { SearchBar } from "../components/SeachBar.js";
-import { Pagination, ProductList, Select } from "../components/index.js";
+import {
+  Pagination,
+  ProductList,
+  Select,
+  CartStatus,
+} from "../components/index.js";
 import { navigate } from "../router.js";
+import { store } from "../store/module.js";
+import { getMainState } from "../store/selector.js";
 
 export default function Main({ $target }) {
-  this.$container = document.createElement("div");
-  this.$productList = document.createElement("div");
-
-  this.state = {
-    products: [],
-    limit: 10,
-    skip: 0,
-    total: 0,
-    page: 1,
-    q: "",
-  };
+  this.$target = $target;
+  this.isFirstInit = false;
 
   this.template = function () {
-    const { limit, skip, total, page, products, q } = this.state;
+    const { limit, skip, total, page, products, q } =
+      store.getState(getMainState);
+
     return `
-    <main>여기는 메인 제품 페이지
+    <main id="main">
+    여기는 메인 제품 페이지
     <div>
       <ul>
         <li>limit : ${limit}</li>
@@ -30,6 +31,7 @@ export default function Main({ $target }) {
         <li>total : ${total}</li>
         <li>page : ${page}</li>
         <li>q : ${q}</li>
+        <li>${CartStatus()}</li>
       </ul>
     </div>
 
@@ -48,14 +50,12 @@ export default function Main({ $target }) {
     `;
   };
 
-  this.setState = function (newValue) {
-    console.log("before:", this.state);
-    this.state = {
-      ...this.state,
-      ...newValue,
-    };
-
-    this.render();
+  this.setup = () => {
+    store.subscribe("/", () => {
+      if (window.location.pathname === "/") {
+        this.render();
+      }
+    });
   };
 
   // handler
@@ -64,7 +64,7 @@ export default function Main({ $target }) {
   };
 
   this.onChangeLimit = async function (selectedLimit) {
-    const { q } = this.state;
+    const { q } = store.getState(getMainState);
     let result;
 
     if (q) {
@@ -79,11 +79,12 @@ export default function Main({ $target }) {
         skip: 0,
       });
     }
-    this.setState({ ...result, page: 1 });
+    const main = store.getState(getMainState);
+    store.dispatch({ main: { ...main, ...result, page: 1 } });
   };
 
   this.onChangePage = async function (selectedPage) {
-    const { limit, page, q } = this.state;
+    const { limit, page, q } = store.getState(getMainState);
     if (Number(selectedPage) === Number(page)) return;
 
     let result;
@@ -101,39 +102,37 @@ export default function Main({ $target }) {
       });
     }
 
-    this.setState({ ...result, page: Number(selectedPage), limit });
+    const main = store.getState(getMainState);
+    store.dispatch({
+      main: { ...main, ...result, page: Number(selectedPage), limit },
+    });
   };
 
   this.searchQuery = async function (q) {
-    const { limit } = this.state;
+    const { limit } = store.getState(getMainState);
     const result = await getProductsWithQuery({ q, limit, skip: 0 });
 
-    this.setState({ ...result, limit, q });
+    const main = store.getState(getMainState);
+    store.dispatch({ main: { ...main, ...result, limit, q, page: 1 } });
   };
 
   this.refresh = async function () {
-    const { limit } = this.state;
+    const { limit } = store.getState(getMainState);
 
     const result = await getAllProducts({
       limit,
     });
-
-    this.setState({ ...result, q: "" });
+    const main = store.getState(getMainState);
+    store.dispatch({ main: { ...main, ...result, q: "" } });
   };
 
-  this.mount = async () => {
-    const { limit, skip } = this.state;
-    const result = await getAllProducts({
-      limit,
-      skip,
-    });
-    this.setState({ ...result });
-
-    this.setEvent();
+  this.mount = () => {
+    const $contianer = this.$target.querySelector("#main");
+    this.setEvent($contianer);
   };
 
-  this.setEvent = () => {
-    this.$container.addEventListener("submit", (e) => {
+  this.setEvent = ($container) => {
+    $container.addEventListener("submit", (e) => {
       e.preventDefault();
       const targetEl = e.target;
       const searchFormEl = targetEl.closest("form.form-search");
@@ -144,7 +143,8 @@ export default function Main({ $target }) {
         this.searchQuery(query);
       }
     });
-    this.$container.addEventListener("change", (e) => {
+
+    $container.addEventListener("change", (e) => {
       const targetEl = e.target;
       const selectEl = targetEl.closest("select");
 
@@ -154,7 +154,7 @@ export default function Main({ $target }) {
       }
     });
 
-    this.$container.addEventListener("click", (e) => {
+    $container.addEventListener("click", (e) => {
       const targetEl = e.target;
       const pageButton = targetEl.closest(".btn-page");
       const productEl = targetEl.closest(".product");
@@ -176,12 +176,22 @@ export default function Main({ $target }) {
     });
   };
 
-  this.render = function () {
-    $target.innerHTML = "";
-    this.$container.innerHTML = this.template();
-    $target.appendChild(this.$container);
+  this.initFetch = async () => {
+    const { limit, skip } = store.getState(getMainState);
+    const result = await getAllProducts({
+      limit,
+      skip,
+    });
+
+    const main = store.getState(getMainState);
+    store.dispatch({ main: { ...main, ...result, page: 1 } });
   };
 
-  this.render();
-  this.mount();
+  this.render = () => {
+    this.$target.innerHTML = this.template();
+    this.mount();
+  };
+
+  this.setup();
+  this.initFetch();
 }
