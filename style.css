@@ -48,6 +48,19 @@ header .title {
   gap: 10px;
 }
 
+.pagination .btn-page {
+  outline: none;
+  background-color: aliceblue;
+  border: none;
+  font-size: 20px;
+  padding: 8px 16px;
+}
+
+.pagination .btn-page.is_active {
+  background-color: dodgerblue;
+  color: white;
+}
+
 dt {
   font-weight: bold;
 }
