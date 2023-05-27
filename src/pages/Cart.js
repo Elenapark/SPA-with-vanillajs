@@ -1,3 +1,4 @@
+import { AppHeader } from "../components/AppHeader.js";
 import { CartList } from "../components/CartList.js";
 import { store } from "../store/module.js";
 import { getCartsState } from "../store/selector.js";
@@ -27,6 +28,7 @@ export default function Cart({ $target }) {
 
     return `
     <div id="carts" >
+      <div id="header"></div>
       ${CartList({ carts })}
     </div>
     `;
@@ -34,6 +36,9 @@ export default function Cart({ $target }) {
 
   this.mount = () => {
     const $container = this.$target.querySelector("#carts");
+    const $header = this.$target.querySelector("#header");
+
+    new AppHeader({ $target: $header, title: "카트" });
     this.setEvent($container);
   };
 

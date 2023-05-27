@@ -1,4 +1,5 @@
 import { getSingleProduct } from "../../service/products_service.js";
+import { AppHeader } from "../components/AppHeader.js";
 import { CartStatus } from "../components/CartStatus.js";
 import { store } from "../store/module.js";
 import { getCartsState } from "../store/selector.js";
@@ -26,6 +27,7 @@ export default function ProductDetail({ $target }) {
     if (loading) {
       return `
       <div id="product">
+      <div id="header"></div>
         로딩중
       </div>
       `;
@@ -34,6 +36,7 @@ export default function ProductDetail({ $target }) {
     if (error) {
       return `
         <div id="product">
+        <div id="header"></div>
           에러발생
         </div>
       `;
@@ -42,6 +45,7 @@ export default function ProductDetail({ $target }) {
     if (!product) {
       return `
         <div id="product">
+        <div id="header"></div>
           제품이 없어요
         </div>
       `;
@@ -63,7 +67,8 @@ export default function ProductDetail({ $target }) {
     const currentItem = carts[id];
 
     return `
-    <div id="product">디떼일
+    <div id="product">
+      <div id="header"></div>
       <div>
         Cart : ${CartStatus()}
       </div>
@@ -166,6 +171,9 @@ export default function ProductDetail({ $target }) {
 
   this.mount = () => {
     const $container = this.$target.querySelector("#product");
+    const $header = this.$target.querySelector("#header");
+
+    new AppHeader({ $target: $header, title: "제품상세" });
     this.setEvent($container);
   };
 

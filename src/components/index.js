@@ -3,3 +3,4 @@ export * from "./Product.js";
 export * from "./ProductList.js";
 export * from "./Select.js";
 export * from "./CartStatus.js";
+export * from "./AppHeader.js";

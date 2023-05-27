@@ -8,6 +8,7 @@ import {
   ProductList,
   Select,
   CartStatus,
+  AppHeader,
 } from "../components/index.js";
 import { navigate } from "../router.js";
 import { store } from "../store/module.js";
@@ -23,17 +24,18 @@ export default function Main({ $target }) {
 
     return `
     <main id="main">
-    여기는 메인 제품 페이지
-    <div>
-      <ul>
-        <li>limit : ${limit}</li>
-        <li>skip : ${skip}</li>
-        <li>total : ${total}</li>
-        <li>page : ${page}</li>
-        <li>q : ${q}</li>
-        <li>${CartStatus()}</li>
-      </ul>
-    </div>
+      <div id="header"></div>
+    
+      <div>
+        <ul>
+          <li>limit : ${limit}</li>
+          <li>skip : ${skip}</li>
+          <li>total : ${total}</li>
+          <li>page : ${page}</li>
+          <li>q : ${q}</li>
+          <li>${CartStatus()}</li>
+        </ul>
+      </div>
 
     ${SearchBar({ q, total })}
 
@@ -128,6 +130,9 @@ export default function Main({ $target }) {
 
   this.mount = () => {
     const $contianer = this.$target.querySelector("#main");
+    const $header = this.$target.querySelector("#header");
+
+    new AppHeader({ $target: $header, title: "제품정보", isBack: false });
     this.setEvent($contianer);
   };
 

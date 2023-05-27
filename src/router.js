@@ -25,7 +25,13 @@ export default function Router({ $target }) {
       if (isReplace || to === location.pathname) {
         history.replaceState(null, "", to);
       } else {
-        history.pushState(null, "", to);
+        history.pushState(
+          {
+            url: window.location.href,
+          },
+          "",
+          to
+        );
       }
 
       this.render();
