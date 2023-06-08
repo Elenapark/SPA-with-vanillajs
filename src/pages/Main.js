@@ -1,7 +1,7 @@
 import {
   getAllProducts,
   getProductsWithQuery,
-} from "../../service/products_service.js";
+} from "../service/products_service.js";
 import { SearchBar } from "../components/SeachBar.js";
 import {
   Pagination,
@@ -57,44 +57,49 @@ export default function Main({ $target }) {
     navigate(`/product/${id}`);
   };
 
-  this.onChangeLimit = async function (selectedLimit) {
-    const { q } = store.getState(getMainState);
-    let result;
+  this.fetchProduct = async ({ q, limit, skip }) => {
+    try {
+      let result;
+      if (q) {
+        result = await getProductsWithQuery({
+          limit,
+          skip,
+          q,
+        });
+      } else {
+        result = await getAllProducts({
+          limit,
+          skip,
+        });
+      }
 
-    if (q) {
-      result = await getProductsWithQuery({
-        limit: selectedLimit,
-        skip: 0,
-        q,
-      });
-    } else {
-      result = await getAllProducts({
-        limit: selectedLimit,
-        skip: 0,
-      });
+      return result;
+    } catch (error) {
+      alert("에러발생");
     }
+  };
+
+  this.onChangeLimit = async (selectedLimit) => {
+    const { q } = store.getState(getMainState);
+    const result = await this.fetchProduct({
+      q,
+      limit: selectedLimit,
+      skip: 0,
+    });
+
     const main = store.getState(getMainState);
     store.dispatch({ main: { ...main, ...result, page: 1 } });
   };
 
-  this.onChangePage = async function (selectedPage) {
+  this.onChangePage = async (selectedPage) => {
     const { limit, page, q } = store.getState(getMainState);
     if (Number(selectedPage) === Number(page)) return;
 
-    let result;
-
-    if (q) {
-      result = await getProductsWithQuery({
-        limit,
-        skip: limit * (selectedPage - 1),
-        q,
-      });
-    } else {
-      result = await getAllProducts({
-        limit,
-        skip: limit * (selectedPage - 1),
-      });
-    }
+    const result = await this.fetchProduct({
+      q,
+      skip: limit * (selectedPage - 1),
+      limit,
+    });
 
     const main = store.getState(getMainState);
     store.dispatch({
@@ -102,15 +107,18 @@ export default function Main({ $target }) {
     });
   };
 
-  this.searchQuery = async function (q) {
-    const { limit } = store.getState(getMainState);
-    const result = await getProductsWithQuery({ q, limit, skip: 0 });
-
-    const main = store.getState(getMainState);
-    store.dispatch({ main: { ...main, ...result, limit, q, page: 1 } });
+  this.searchQuery = async (q) => {
+    try {
+      const { limit } = store.getState(getMainState);
+      const result = await getProductsWithQuery({ q, limit, skip: 0 });
+      const main = store.getState(getMainState);
+      store.dispatch({ main: { ...main, ...result, limit, q, page: 1 } });
+    } catch (error) {
+      alert("에러발생");
+    }
   };
 
-  this.refresh = async function () {
+  this.refresh = async () => {
     const { limit } = store.getState(getMainState);
 
     const result = await getAllProducts({
@@ -174,17 +182,20 @@ export default function Main({ $target }) {
   };
 
   this.initFetch = async () => {
-    const { limit, skip, products } = store.getState(getMainState);
+    try {
+      const { limit, skip, products } = store.getState(getMainState);
+      if (products.length !== 0) return;
 
-    if (products.length !== 0) return;
+      const result = await getAllProducts({
+        limit,
+        skip,
+      });
 
-    const result = await getAllProducts({
-      limit,
-      skip,
-    });
-
-    const main = store.getState(getMainState);
-    store.dispatch({ main: { ...main, ...result, page: 1 } });
+      const main = store.getState(getMainState);
+      store.dispatch({ main: { ...main, ...result, page: 1 } });
+    } catch (error) {
+      alert("에러발생");
+    }
   };
 
   this.render = () => {
