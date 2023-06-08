@@ -1,8 +1,9 @@
-import { getSingleProduct } from "../../service/products_service.js";
+import { getSingleProduct } from "../service/products_service.js";
 import { AppHeader } from "../components/AppHeader.js";
 import { ProductDetailCard } from "../components/ProductDetailCard.js";
 import { store } from "../store/module.js";
 import { getCartsState } from "../store/selector.js";
+import { setCartStorage } from "../utils/localstorage.js";
 
 export default function ProductDetail({ $target }) {
   this.$target = $target;
@@ -108,10 +109,10 @@ export default function ProductDetail({ $target }) {
       [id]: { ...product, quantity: totalQuantity },
     };
 
+    setCartStorage(newCarts);
     store.dispatch({
       carts: newCarts,
     });
-    localStorage.setItem("carts", JSON.stringify(newCarts));
   };
 
   this.initFetch = async () => {

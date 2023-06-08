@@ -1,3 +1,4 @@
+import { getCartStorage } from "../utils/localstorage.js";
 import { Store } from "../utils/store.js";
 
 export const store = new Store({
@@ -9,5 +10,5 @@ export const store = new Store({
     page: 1,
     q: "",
   },
-  carts: JSON.parse(localStorage.getItem("carts")) ?? {},
+  carts: getCartStorage() ?? {},
 });

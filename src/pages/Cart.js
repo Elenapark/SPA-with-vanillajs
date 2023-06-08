@@ -2,6 +2,7 @@ import { AppHeader } from "../components/AppHeader.js";
 import { CartList } from "../components/CartList.js";
 import { store } from "../store/module.js";
 import { getCartsState } from "../store/selector.js";
+import { setCartStorage } from "../utils/localstorage.js";
 
 export default function Cart({ $target }) {
   this.$target = $target;
@@ -11,7 +12,7 @@ export default function Cart({ $target }) {
     const newCarts = { ...carts };
     delete newCarts[id];
 
-    localStorage.setItem("carts", JSON.stringify(newCarts));
+    setCartStorage(newCarts);
     store.dispatch({ carts: newCarts });
   };
 

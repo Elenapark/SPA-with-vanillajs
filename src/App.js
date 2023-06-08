@@ -1,5 +1,4 @@
 import Router from "./router.js";
-import { store } from "./store/module.js";
 
 export default function App({ $target }) {
   this.$target = $target;
